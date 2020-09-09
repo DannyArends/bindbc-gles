@@ -1,0 +1,19 @@
+name "bindbc-gles"
+description "Dynamic bindings to GLES, compatible with -betterC, @nogc, and nothrow."
+homepage ""
+authors "Danny Arends"
+license "Boost"
+
+targetType "staticLibrary"
+targetPath "lib"
+targetName "BindBC_GLES"
+
+dependency "bindbc-loader" version="~>0.3.0"
+
+configuration "dynamic" {
+}
+
+configuration "dynamicBC" {
+    subConfiguration "bindbc-loader" "yesBC"
+    dflags "-betterC"
+}
