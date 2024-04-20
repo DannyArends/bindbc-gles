@@ -403,9 +403,11 @@ __gshared {
 }
 
 bool loadGLES(SharedLib lib){
+    bool hasV10Plus, hasV10Only, hasV20, hasV32;
+
     auto startErrorCount = errorCount();
+    //V1.0 and later
     lib.bindSymbol( cast( void** )&glActiveTexture, "glActiveTexture" );
-    lib.bindSymbol( cast( void** )&glAlphaFunc, "glAlphaFunc" );
     lib.bindSymbol( cast( void** )&glBindBuffer, "glBindBuffer" );
     lib.bindSymbol( cast( void** )&glBindTexture, "glBindTexture" );
     lib.bindSymbol( cast( void** )&glBlendFunc, "glBlendFunc" );
@@ -415,13 +417,7 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glClearColor, "glClearColor" );
     lib.bindSymbol( cast( void** )&glClearDepthf, "glClearDepthf" );
     lib.bindSymbol( cast( void** )&glClearStencil, "glClearStencil" );
-    lib.bindSymbol( cast( void** )&glClientActiveTexture, "glClientActiveTexture" );
-    lib.bindSymbol( cast( void** )&glClipPlanef, "glClipPlanef" );
-    lib.bindSymbol( cast( void** )&glColor4f, "glColor4f" );
-    lib.bindSymbol( cast( void** )&glColor4ub, "glColor4ub" );
-    lib.bindSymbol( cast( void** )&glColor4x, "glColor4x" );
     lib.bindSymbol( cast( void** )&glColorMask, "glColorMask" );
-    lib.bindSymbol( cast( void** )&glColorPointer, "glColorPointer" );
     lib.bindSymbol( cast( void** )&glCompressedTexImage2D, "glCompressedTexImage2D" );
     lib.bindSymbol( cast( void** )&glCompressedTexSubImage2D, "glCompressedTexSubImage2D" );
     lib.bindSymbol( cast( void** )&glCopyTexImage2D, "glCopyTexImage2D" );
@@ -432,43 +428,69 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glDepthFunc, "glDepthFunc" );
     lib.bindSymbol( cast( void** )&glDepthMask, "glDepthMask" );
     lib.bindSymbol( cast( void** )&glDepthRangef, "glDepthRangef" );
-    lib.bindSymbol( cast( void** )&glDepthRangex, "glDepthRangex" );
     lib.bindSymbol( cast( void** )&glDrawArrays, "glDrawArrays" );
     lib.bindSymbol( cast( void** )&glDrawElements, "glDrawElements" );
     lib.bindSymbol( cast( void** )&glEnable, "glEnable" );
-    lib.bindSymbol( cast( void** )&glEnableClientState, "glEnableClientState" );
     lib.bindSymbol( cast( void** )&glFinish, "glFinish" );
     lib.bindSymbol( cast( void** )&glFlush, "glFlush" );
-    lib.bindSymbol( cast( void** )&glFogf, "glFogf" );
-    lib.bindSymbol( cast( void** )&glFogfv, "glFogfv" );
-    lib.bindSymbol( cast( void** )&glFogx, "glFogx" );
-    lib.bindSymbol( cast( void** )&glFogxv, "glFogxv" );
     lib.bindSymbol( cast( void** )&glFrontFace, "glFrontFace" );
-    lib.bindSymbol( cast( void** )&glFrustumf, "glFrustumf" );
-    lib.bindSymbol( cast( void** )&glFrustumx, "glFrustumx" );
     lib.bindSymbol( cast( void** )&glGenBuffers, "glGenBuffers" );
     lib.bindSymbol( cast( void** )&glGenTextures, "glGenTextures" );
     lib.bindSymbol( cast( void** )&glGetBufferParameteriv, "glGetBufferParameteriv" );
-    lib.bindSymbol( cast( void** )&glGetClipPlanex, "glGetClipPlanex" );
     lib.bindSymbol( cast( void** )&glGetError, "glGetError" );
-    lib.bindSymbol( cast( void** )&glGetFixedv, "glGetFixedv" );
     lib.bindSymbol( cast( void** )&glGetIntegerv, "glGetIntegerv" );
-    lib.bindSymbol( cast( void** )&glGetLightfv, "glGetLightfv" );
-    lib.bindSymbol( cast( void** )&glGetLightxv, "glGetLightxv" );
-    lib.bindSymbol( cast( void** )&glGetMaterialfv, "glGetMaterialfv" );
-    lib.bindSymbol( cast( void** )&glGetMaterialxv, "glGetMaterialxv" );
     lib.bindSymbol( cast( void** )&glGetPointerv, "glGetPointerv" );
     lib.bindSymbol( cast( void** )&glGetString, "glGetString" );
-    lib.bindSymbol( cast( void** )&glGetTexEnvfv, "glGetTexEnvfv" );
-    lib.bindSymbol( cast( void** )&glGetTexEnviv, "glGetTexEnviv" );
-    lib.bindSymbol( cast( void** )&glGetTexEnvxv, "glGetTexEnvxv" );
     lib.bindSymbol( cast( void** )&glGetTexParameterfv, "glGetTexParameterfv" );
     lib.bindSymbol( cast( void** )&glGetTexParameteriv, "glGetTexParameteriv" );
-    lib.bindSymbol( cast( void** )&glGetTexParameterxv, "glGetTexParameterxv" );
     lib.bindSymbol( cast( void** )&glHint, "glHint" );
     lib.bindSymbol( cast( void** )&glIsBuffer, "glIsBuffer" );
     lib.bindSymbol( cast( void** )&glIsEnabled, "glIsEnabled" );
     lib.bindSymbol( cast( void** )&glIsTexture, "glIsTexture" );
+    lib.bindSymbol( cast( void** )&glLineWidth, "glLineWidth" );
+    lib.bindSymbol( cast( void** )&glPixelStorei, "glPixelStorei" );
+    lib.bindSymbol( cast( void** )&glPolygonOffset, "glPolygonOffset" );
+    lib.bindSymbol( cast( void** )&glReadPixels, "glReadPixels" );
+    lib.bindSymbol( cast( void** )&glSampleCoverage, "glSampleCoverage" );
+    lib.bindSymbol( cast( void** )&glScissor, "glScissor" );
+    lib.bindSymbol( cast( void** )&glStencilFunc, "glStencilFunc" );
+    lib.bindSymbol( cast( void** )&glStencilMask, "glStencilMask" );
+    lib.bindSymbol( cast( void** )&glStencilOp, "glStencilOp" );
+    lib.bindSymbol( cast( void** )&glTexImage2D, "glTexImage2D" );
+    lib.bindSymbol( cast( void** )&glTexParameteri, "glTexParameteri" );
+    lib.bindSymbol( cast( void** )&glTexParameteriv, "glTexParameteriv" );
+    lib.bindSymbol( cast( void** )&glTexSubImage2D, "glTexSubImage2D" );
+    lib.bindSymbol( cast( void** )&glViewport, "glViewport" );
+    hasV10Plus = (startErrorCount == errorCount());
+    startErrorCount = errorCount();
+    //loadedVersion = GLESSupport.GLES10;
+    
+    //V1.0 only
+        lib.bindSymbol( cast( void** )&glAlphaFunc, "glAlphaFunc" );
+    lib.bindSymbol( cast( void** )&glClientActiveTexture, "glClientActiveTexture" );
+    lib.bindSymbol( cast( void** )&glClipPlanef, "glClipPlanef" );
+    lib.bindSymbol( cast( void** )&glColor4f, "glColor4f" );
+    lib.bindSymbol( cast( void** )&glColor4ub, "glColor4ub" );
+    lib.bindSymbol( cast( void** )&glColor4x, "glColor4x" );
+    lib.bindSymbol( cast( void** )&glColorPointer, "glColorPointer" );
+    lib.bindSymbol( cast( void** )&glDepthRangex, "glDepthRangex" );
+    lib.bindSymbol( cast( void** )&glEnableClientState, "glEnableClientState" );
+    lib.bindSymbol( cast( void** )&glFogf, "glFogf" );
+    lib.bindSymbol( cast( void** )&glFogfv, "glFogfv" );
+    lib.bindSymbol( cast( void** )&glFogx, "glFogx" );
+    lib.bindSymbol( cast( void** )&glFogxv, "glFogxv" );
+    lib.bindSymbol( cast( void** )&glFrustumf, "glFrustumf" );
+    lib.bindSymbol( cast( void** )&glFrustumx, "glFrustumx" );
+    lib.bindSymbol( cast( void** )&glGetClipPlanex, "glGetClipPlanex" );
+    lib.bindSymbol( cast( void** )&glGetFixedv, "glGetFixedv" );
+    lib.bindSymbol( cast( void** )&glGetLightfv, "glGetLightfv" );
+    lib.bindSymbol( cast( void** )&glGetLightxv, "glGetLightxv" );
+    lib.bindSymbol( cast( void** )&glGetMaterialfv, "glGetMaterialfv" );
+    lib.bindSymbol( cast( void** )&glGetMaterialxv, "glGetMaterialxv" );
+    lib.bindSymbol( cast( void** )&glGetTexEnvfv, "glGetTexEnvfv" );
+    lib.bindSymbol( cast( void** )&glGetTexEnviv, "glGetTexEnviv" );
+    lib.bindSymbol( cast( void** )&glGetTexEnvxv, "glGetTexEnvxv" );
+    lib.bindSymbol( cast( void** )&glGetTexParameterxv, "glGetTexParameterxv" );
     lib.bindSymbol( cast( void** )&glLightf, "glLightf" );
     lib.bindSymbol( cast( void** )&glLightfv, "glLightfv" );
     lib.bindSymbol( cast( void** )&glLightx, "glLightx" );
@@ -477,7 +499,6 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glLightModelfv, "glLightModelfv" );
     lib.bindSymbol( cast( void** )&glLightModelx, "glLightModelx" );
     lib.bindSymbol( cast( void** )&glLightModelxv, "glLightModelxv" );
-    lib.bindSymbol( cast( void** )&glLineWidth, "glLineWidth" );
     lib.bindSymbol( cast( void** )&glLineWidthx, "glLineWidthx" );
     lib.bindSymbol( cast( void** )&glLoadIdentity, "glLoadIdentity" );
     lib.bindSymbol( cast( void** )&glLoadMatrixf, "glLoadMatrixf" );
@@ -496,42 +517,30 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glNormalPointer, "glNormalPointer" );
     lib.bindSymbol( cast( void** )&glOrthof, "glOrthof" );
     lib.bindSymbol( cast( void** )&glOrthox, "glOrthox" );
-    lib.bindSymbol( cast( void** )&glPixelStorei, "glPixelStorei" );
     lib.bindSymbol( cast( void** )&glPointParameterf, "glPointParameterf" );
     lib.bindSymbol( cast( void** )&glPointParameterfv, "glPointParameterfv" );
     lib.bindSymbol( cast( void** )&glPointParameterx, "glPointParameterx" );
     lib.bindSymbol( cast( void** )&glPointParameterxv, "glPointParameterxv" );
     lib.bindSymbol( cast( void** )&glPointSize, "glPointSize" );
     lib.bindSymbol( cast( void** )&glPointSizex, "glPointSizex" );
-    lib.bindSymbol( cast( void** )&glPolygonOffset, "glPolygonOffset" );
     lib.bindSymbol( cast( void** )&glPolygonOffsetx, "glPolygonOffsetx" );
     lib.bindSymbol( cast( void** )&glPushMatrix, "glPushMatrix" );
-    lib.bindSymbol( cast( void** )&glReadPixels, "glReadPixels" );
     lib.bindSymbol( cast( void** )&glRotatef, "glRotatef" );
     lib.bindSymbol( cast( void** )&glRotatex, "glRotatex" );
-    lib.bindSymbol( cast( void** )&glSampleCoverage, "glSampleCoverage" );
     lib.bindSymbol( cast( void** )&glSampleCoveragex, "glSampleCoveragex" );
     lib.bindSymbol( cast( void** )&glScalex, "glScalex" );
-    lib.bindSymbol( cast( void** )&glScissor, "glScissor" );
     lib.bindSymbol( cast( void** )&glShadeModel, "glShadeModel" );
-    lib.bindSymbol( cast( void** )&glStencilFunc, "glStencilFunc" );
-    lib.bindSymbol( cast( void** )&glStencilMask, "glStencilMask" );
-    lib.bindSymbol( cast( void** )&glStencilOp, "glStencilOp" );
     lib.bindSymbol( cast( void** )&glTexCoordPointer, "glTexCoordPointer" );
     lib.bindSymbol( cast( void** )&glTexEnvi, "glTexEnvi" );
     lib.bindSymbol( cast( void** )&glTexEnvx, "glTexEnvx" );
     lib.bindSymbol( cast( void** )&glTexEnviv, "glTexEnviv" );
     lib.bindSymbol( cast( void** )&glTexEnvxv, "glTexEnvxv" );
-    lib.bindSymbol( cast( void** )&glTexImage2D, "glTexImage2D" );
-    lib.bindSymbol( cast( void** )&glTexParameteri, "glTexParameteri" );
     lib.bindSymbol( cast( void** )&glTexParameterx, "glTexParameterx" );
-    lib.bindSymbol( cast( void** )&glTexParameteriv, "glTexParameteriv" );
     lib.bindSymbol( cast( void** )&glTexParameterxv, "glTexParameterxv" );
-    lib.bindSymbol( cast( void** )&glTexSubImage2D, "glTexSubImage2D" );
     lib.bindSymbol( cast( void** )&glTranslatex, "glTranslatex" );
     lib.bindSymbol( cast( void** )&glVertexPointer, "glVertexPointer" );
-    lib.bindSymbol( cast( void** )&glViewport, "glViewport" );
-    loadedVersion = GLESSupport.GLES10;
+    hasV10Only = (startErrorCount == errorCount());
+    startErrorCount = errorCount();
     
     //V2.0
     lib.bindSymbol( cast( void** )&glDisable, "glDisable" );
@@ -559,6 +568,8 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glAttachShader, "glAttachShader" );
     lib.bindSymbol( cast( void** )&glLinkProgram, "glLinkProgram" );
     lib.bindSymbol( cast( void** )&glGenerateMipmap, "glGenerateMipmap" );
+    hasV20 = (startErrorCount == errorCount());
+    startErrorCount = errorCount();
   
     //V3.2
     lib.bindSymbol( cast( void** )&glDrawBuffers, "glDrawBuffers" );
@@ -568,7 +579,15 @@ bool loadGLES(SharedLib lib){
     lib.bindSymbol( cast( void** )&glGetAttribLocation, "glGetAttribLocation" );
     lib.bindSymbol( cast( void** )&glEnableVertexAttribArray, "glEnableVertexAttribArray" );
     lib.bindSymbol( cast( void** )&glVertexAttribPointer, "glVertexAttribPointer" );
-
-    return(errorCount() == startErrorCount);
+    hasV32 = (startErrorCount == errorCount());
+    
+    if (hasV32)
+        loadedVersion = GLESSupport.GLES32;
+    else if (hasV20)
+        loadedVersion = GLESSupport.GLES20;
+    else if (hasV10Only)
+        loadedVersion = GLESSupport.GLES10;
+    
+    return(hasV10Plus && (hasV10Only || hasV20));
 }
 
